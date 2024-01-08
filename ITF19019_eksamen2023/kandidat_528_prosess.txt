@@ -1,0 +1,20 @@
+generelt
+på grunn av kollisjon med andre fag har jeg ikke fått vært i forelesninger i dette faget, så jeg har nesten utelukkende brukt nettressurser kurset JavaScript - The Complete Guide 2023 (Beginner + Advanced) av Maximillian Schwarzmüller på Udemy (uten at jeg har verken har fullført kurset eller blitt noen ekspert..) samt fått god veiledning til obliger og i forkant av eksamen av medstudentene Yahye Abdi Ahmed og Karoline Nordstrand Johannessen
+kombinert med at jeg tidligere har tatt programmering 1 og 2, og er veldig mye mer komfortabel i python kan det godt hende jeg har bommet på en god del "best practice" i JavaScript, og har i overkant verbos kode enkelte steder jeg har vært usikker på hvordan jeg skal gjøre pent
+all kode er formatert med terminalverktøyet prettier, håper det er godkjent formatering!
+siden jeg har hatt mye å gjøre har det blitt ganske klattvis arbeid med oppgavene, og jeg tror jeg kunne formatert VESENTLIG bedre med litt jevnere jobbing - særlig oppgave 3 bærer preg av dette
+
+hadde virkelig håpet på en B i dette faget, men forståelsen har vært dårligere enn jeg trodde, særlig oppgave 3 var fryktelig vanskelig, og med konsepter jeg ikke fikk surret hodet rundt
+
+oppgave 1
+jeg fant ikke noen enkel måte å få oppgaven til å fungere uten å endre litt på html, så jeg har der endret "onclick" til previous og next-knappene til å kalle riktig metode, samt endret dobbel control-multiply til control-divide, siden det ga meg hår på øynene at det stod dobbelt, tross "tips" som insisterer på at html fungererer uavhengig av disse endringene.
+kanskje en B? jeg tror koden er noenlunde ålreit, kanskje litt vel verbos i funksjonene som styrer minnet og blar frem og tilbake. next og previous blir ikke utilgjengelig når de man er på første og siste, men sånn er livet
+
+
+oppgave 2
+vesentlig mer krevende oppgave - gikk meg også litt vill i egne variabelnavn som definitivt kunne vært bedre, men fant gode ressurser (notert i kommentarer) for å forstå syntaks og sammenheng, særlig på konstruktør(?) og logikk for å tegne canvaset etter hver knapp. veldig god kode som utgangspunkt som hjalp godt med feilsøking, så takk!
+fikk denne til ganske bra, morsom oppgave som fungerte bra med min tenkemåte, veldig frustrerende å ikke komme helt i mål med timer, men så blir jeg kanskje aldri webutvikler..
+
+oppgave 3
+beklager det uakademiske språket, men herregud så mange funksjoner dette ble, da..
+jeg merker at jeg skriver litt pythonesque kode, og sliter med å bruke fornuftige objektorienterte løsninger som er innebygget i JS. må slå opp mye i mozilla-dokumentasjon og diverse forum for å "oversette" løsningene mine fra Python til JS. denne oppgaven var så next-level at jeg heller satt inn støtet litt på de andre, som jeg tror ble ganske gode, men her var det simpelthen konsepter og greier jeg ikke klarte å få til bedre enn det jeg tror og håper oppfyller D-krav

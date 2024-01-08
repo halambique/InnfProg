@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staff register</title>
+    <link href="style.css" rel="stylesheet" media="screen" />
+  </head>
+
+  <body>
+    <header>
+      <h1>Staff Register</h1>
+    </header>
+    <main>
+      <section id="list">
+        <nav id="filter">
+          <p>Filter on position:</p>
+          <ul id="positionFilter">
+            <li><button class="all active">All positions</button></li>
+          </ul>
+        </nav>
+        <h2 id="listHeader">Showing all Staff</h2>
+        <div id="staffList"></div>
+      </section>
+      <section id="admin">
+        <div class="form">
+          <h2>Add staff</h2>
+          <p>
+            <label for="firstname">Firstname</label>
+            <input
+              type="text"
+              name="firstname"
+              id="firstname"
+              placeholder="Firstname"
+            />
+          </p>
+          <p>
+            <label for="lastname">Lastname</label>
+            <input
+              type="text"
+              name="lastname"
+              id="lastname"
+              placeholder="Lastname"
+            />
+          </p>
+          <p>
+            <label for="position">Position</label>
+            <select id="position" name="postition"></select>
+          </p>
+          <p>
+            <label for="department">Department</label>
+            <select id="department" name="department"></select>
+          </p>
+          <p>
+            <!-- fjernet stray </select> funnet med HTML validator-->
+            <label for="email">Email address</label
+            ><input
+              type="email"
+              name="email"
+              id="email"
+              placeholder="you@email.com"
+            />
+          </p>
+          <button id="saveStaff">Save staff member</button>
+        </div>
+        <div class="form">
+          <h2>Add position</h2>
+          <p>
+            <label for="newPosition">Position</label
+            ><input
+              type="text"
+              name="newPosition"
+              id="newPosition"
+              placeholder="Position"
+            />
+          </p>
+          <button id="savePosition" onClick="newPosition()">
+            Save new position
+          </button>
+        </div>
+        <div class="form">
+          <h2>Add department</h2>
+          <p>
+            <label for="newDepartment">Department</label
+            ><input
+              type="text"
+              name="newDepartment"
+              id="newDepartment"
+              placeholder="Department"
+            />
+          </p>
+          <button id="saveDepartment">Save new department</button>
+        </div>
+      </section>
+    </main>
+    <script>
+      //Array of staff objects
+      const staff = [
+        {
+          firstname: "Bill",
+          lastname: "Gates",
+          position: "Director",
+          department: "Administration",
+          email: "bill@gates.net",
+        },
+      ];
+
+      //Array of available positions
+      const positions = [
+        "Director",
+        "Team leader",
+        "Producer",
+        "Engineer",
+        "Designer",
+      ];
+
+      //Array of available departments
+      const departments = [
+        "Administration",
+        "Human Resources",
+        "Production",
+        "Finances",
+      ];
+
+      /*funksjon som viser ansattlisten
+        et lite mareritt å få kodelogikken til å gå opp, så kanskje litt vel "python" løsning på dette, funksjonen tar hvert "objekt", eller ansatte i html og lager elementene som kreves for å vise dem som ansattkort, og bruker deretter CSSen for å få dem inn i riktig styling. til slutt legges all informasjonen inn i et ansattkort, før ansattkortet selv legges til på siden. jeg gikk meg også ganske vill med navnene fra CSSen, så at alt heter membercard her gjorde at dette sikkert tok lenger tid enn der burde for å få riktig kall. fikk det endelig til å fungere, og tør ikke endre for mye nå! fikk heller ikke lenke på epost til å fungere før jeg fant denne godsaken: https://www.geeksforgeeks.org/how-to-create-a-link-in-javascript
+        fikk til slutt hjelp av medstudent Stephen Stenberg for å fikse ikonene, siden det plaget meg at jeg ikke klarte å få siden til å se noenlunde pen ut
+        jeg har heller ikke klart å få til å velge department eller position da denne oppgaven først ble løst for minstekrav, men jeg kommer tilbake til det i andre funksjoner
+        fikk ordnet department og position etter å ha implementert dropdownOptions() og kommet tilbake for å prøve å fikse sortering på etternav. Oppgaven bærer preg av at jeg forsøkte på høyere karakterkrav, men til slutt måtte gi opp*/
+      function displayStaffList(filer = "All") {
+        const staffListElement = document.getElementById("staffList");
+        //hindrer duplikater
+        staffListElement.innerHTML = "";
+        /*
+                Dette hadde aldri i livet vært mulig uten å slå opp i:
+                https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+                og forklaring fra:
+                https://forum.freecodecamp.org/t/arr-sort-a-b-a-b-explanation/167677/2
+                samt:
+                https://www.w3schools.com/jsref/jsref_slice_array.asp
+                */
+        const sortedStaff = staff
+          .slice()
+          .sort((a, b) => a.lastname.localeCompare(b.lastname));
+        for (let i = 0; i < staff.length; i++) {
+          const worker = staff[i];
+          const membercard = document.createElement("article");
+          const name = document.createElement("h3");
+          const metainfo = document.createElement("p");
+          const email = document.createElement("p");
+
+          membercard.className = "membercard";
+          membercard.id = "worker" + i;
+
+          name.textContent = worker.lastname + ", " + worker.firstname;
+          metainfo.textContent = worker.position + " - " + worker.department;
+          metainfo.innerHTML = `<img src="posicon.png" alt="position: "> ${worker.position} <img src="depicon.png" alt="department: "> ${worker.department}`;
+          email.innerHTML = `<a href="mailto:${worker.email}"><img src="mailicon.png" alt="email"> Send mail to ${worker.firstname}</a>`;
+
+          membercard.appendChild(name);
+          membercard.appendChild(metainfo);
+          membercard.appendChild(email);
+
+          staffListElement.appendChild(membercard);
+        }
+      }
+      //lager "skjemaet" for hva som kan tas som input
+      function newStaffMember() {
+        const firstname = document.getElementById("firstname").value;
+        const lastname = document.getElementById("lastname").value;
+        const email = document.getElementById("email").value;
+        const position = document.getElementById("position").value;
+        const department = document.getElementById("department").value;
+        //skriver feilmelding dersom de obligatoriske feltene mangler
+        if (!firstname || !lastname || !email) {
+          alert(
+            "Please make sure to insert the mandatory fields: First name, last name and email address",
+          );
+          return;
+        }
+        //oppretter nytt staffMember-objekt med "konstruktør"/"struct", se kommentar i oppgave 2
+        const newWorker = {
+          firstname: firstname,
+          lastname: lastname,
+          email: email,
+          position: position,
+          department: department,
+        };
+
+        //pusher det nye objektet til arrayet og tømmer alle feltene
+        staff.push(newWorker);
+        document.getElementById("firstname").value = "";
+        document.getElementById("lastname").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("position").value = "";
+        document.getElementById("department").value = "";
+        displayStaffList();
+      }
+      //event-listener for å sjekke når saveStaff-knappen trykkes
+      document
+        .getElementById("saveStaff")
+        .addEventListener("click", newStaffMember);
+
+      //Føles som en klønete måte å gjøre det på, men her går jeg gjennom alle mulige valg for posisjoner og avdelinger for å fylle inn nedtrekksmenyene. Igjen, kanskje litt for python-inspirert kode som blir veldig verbos og iterativ. Lagt inn sortering i forbindelse med forsøk på høyere karakterkrav som jeg ikke har oppnådd resten av.
+      function dropdownOptions() {
+        const positionOption = document.getElementById("position");
+        const departmentOption = document.getElementById("department");
+
+        positions.sort().forEach(function (pos) {
+          const option = document.createElement("option");
+          option.value = pos;
+          option.textContent = pos;
+          positionOption.appendChild(option);
+        });
+
+        departments.sort().forEach(function (dep) {
+          const option = document.createElement("option");
+          option.value = dep;
+          option.textContent = dep;
+          departmentOption.appendChild(option);
+        });
+      }
+
+      /*funksjoner for å opprette nye avdelinger og stillinger som stjeler mye kode fra ekstisterende funksjoner, hovedsakelig dropdownOptions. legger til nytt department og position i ekstisterende arrays*/
+
+      function newDepartment() {
+        const newDepartmentValue =
+          document.getElementById("newDepartment").value;
+        departments.push(newDepartmentValue);
+        departments.sort();
+
+        const departmentOption = document.getElementById("department");
+        departmentOption.innerHTML = "";
+
+        departments.forEach(function (dep) {
+          const option = document.createElement("option");
+          option.value = dep;
+          option.textContent = dep;
+          departmentOption.appendChild(option);
+        });
+        //rydder opp etter at ny avdeling har blitt laget
+        document.getElementById("newDepartment").value = "";
+      }
+      function newPosition() {
+        const newPositionValue = document.getElementById("newPosition").value;
+        positions.push(newPositionValue);
+        positions.sort();
+
+        const positionOption = document.getElementById("position");
+        positionOption.innerHTML = "";
+
+        positions.forEach(function (pos) {
+          const option = document.createElement("option");
+          option.value = pos;
+          option.textContent = pos;
+          positionOption.appendChild(option);
+        });
+        //rydder opp etter at det har blitt laget ny stillng
+        document.getElementById("newPosition").value = "";
+      }
+      document
+        .getElementById("saveDepartment")
+        .addEventListener("click", newDepartment);
+      document
+        .getElementById("savePosition")
+        .addEventListener("click", newPosition);
+
+      dropdownOptions();
+      displayStaffList();
+    </script>
+  </body>
+</html>

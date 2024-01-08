@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eksamen oppgave 1: Kalkulator</title>
+    <link rel="stylesheet" href="font/stylesheet.css" />
+    <link rel="stylesheet" href="oppgave1style.css" />
+  </head>
+  <body>
+    <article>
+      <input type="text" id="calculation" />
+      <div id="keyboard">
+        <div id="numbers">
+          <button id="number-1" value="1" onClick="display('1')">1</button>
+          <button id="number-2" value="2" onClick="display('2')">2</button>
+          <button id="number-3" value="3" onClick="display('3')">3</button>
+          <button id="number-4" value="4" onClick="display('4')">4</button>
+          <button id="number-5" value="5" onClick="display('5')">5</button>
+          <button id="number-6" value="6" onClick="display('6')">6</button>
+          <button id="number-7" value="7" onClick="display('7')">7</button>
+          <button id="number-8" value="8" onClick="display('8')">8</button>
+          <button id="number-9" value="9" onClick="display('9')">9</button>
+          <!--Endret , til .-->
+          <button id="number-dot" value="." onClick="display('.')">,</button>
+          <button id="number-0" value="0" onClick="display('0')">0</button>
+          <button id="control-clear" onClick="clearScreen()">C</button>
+        </div>
+        <div id="controls">
+          <button id="control-plus" value="+" onClick="display('+')">+</button>
+          <button id="control-minus" value="-" onClick="display('-')">-</button>
+          <button id="control-multiply" value="*" onClick="display('*')">*</button>
+          <!--Endret til control-divide-->
+          <button id="control-divide" value="/" onClick="display('/')">/</button>
+          <button id="control-equal" value="=" onClick="solve()">=</button>
+        </div>
+      </div>
+      <div id="memory">
+        <p>Memory (<span id="memory-bank">0</span>)</p>
+        <button id="memory-add" onclick="addMemory()">Add</button>
+        <button id="memory-browseback" onclick="previousCalculation()">
+          Previous
+        </button>
+        <button id="memory-browseforward" onclick="nextCalculation()">
+          Next
+        </button>
+      </div>
+    </article>
+
+    <script>
+      function display(val) {
+        document.getElementById("calculation").value += val;
+        return val;
+      }
+
+      function solve() {
+        let calculation = document.getElementById("calculation").value; // henter html-elementet "calculation", altså inputen som gis id-en "calculation" på linje 12
+        let result = eval(calculation); // den innebygde "eval"-funksjonen tar en streng (tekststrengen "calculation") og "evaluerer" den som et mattestykke og løser det: litt forenklet kan vi si at eval "2+2" blir "4", og resultatet lagres så i variabelen "result". merk at eval-funksjonen kan brukes til å injisere fiendtlige skript, ref: https://stackoverflow.com/questions/13167403/is-javascript-eval-so-dangerous
+        document.getElementById("calculation").value = result; // "omvendt" av linje 52, så oppdaterer denne linjen "calculation" til å være resultatet av linje 53, og html-elementet blir da oppdatert til å vise den utregnede verdien
+        return result; // dersom man ønsker å benytte funksjonen til noe annet enn bare å skrive ut i displayet på kalkulatoren, returnerer også funksjonen "result", slik at det kan behandles til andre ting
+}
+      function clearScreen() {
+        document.getElementById("calculation").value = "";
+      }
+      //initialierererer array og minneindeks
+      let memory = [];
+      let memoryIndex = -1;
+      //oppdaterer minnebank basert på arrayets lengde
+      function updateMemoryCounter() {
+        document.getElementById("memory-bank").textContent = memory.length;
+      }
+
+      function addMemory() {
+        let inputCalculation = document.getElementById("calculation");
+        let currentCalculation = inputCalculation.value;
+        memory.push(currentCalculation);
+        memoryIndex = memory.length - 1;
+        updateMemoryCounter();
+        console.log("Current memory: ", memory);
+      }
+
+      function previousCalculation() {
+        if (memoryIndex > 0) {
+          memoryIndex -= 1;
+          let previous = memory[memoryIndex];
+          let inputCalculation = document.getElementById("calculation");
+          inputCalculation.value = previous;
+          updateMemoryCounter();
+        }
+      }
+
+      function nextCalculation() {
+        if (memoryIndex < memory.length - 1) {
+          memoryIndex += 1;
+          let next = memory[memoryIndex];
+          let inputCalculation = document.getElementById("calculation");
+          inputCalculation.value = next;
+          updateMemoryCounter();
+        }
+      }
+    </script>
+  </body>
+</html>

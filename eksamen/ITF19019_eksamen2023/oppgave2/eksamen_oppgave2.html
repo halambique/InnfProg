@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eksamen i Innføring i Programmering - oppgave 2</title>
+    <link rel="stylesheet" href="oppgave2style.css" />
+  </head>
+  <body>
+    <main>
+      <nav>
+        <h2>Controls</h2>
+        <p>
+          <span class="buttonIllustration" id="sbutton" onclick="addSquare()"
+            >S</span
+          >
+          Add a square
+        </p>
+        <p>
+          <span class="buttonIllustration" id="cbutton" onclick="addCircle()"
+            >C</span
+          >
+          Add a circle
+        </p>
+        <p>
+          <span
+            class="buttonIllustration"
+            id="rbutton"
+            onclick="removeElement()"
+            >R</span
+          >
+          Remove random element
+        </p>
+        <h2>Number of elements</h2>
+        <ul>
+          <li>Squares: <span id="squareCount">0</span></li>
+          <li>Circles: <span id="circleCount">0</span></li>
+          <li>Total: <span id="totalCount">0</span></li>
+        </ul>
+      </nav>
+      <canvas id="drawArea"></canvas>
+    </main>
+
+    <script>
+      //INITIATE CANVAS, TIMER, AVG COUNTER
+      //Canvas width: 600, Canvas height: 500
+      const canvas = document.getElementById("drawArea");
+      canvas.width = 600;
+      canvas.height = 500;
+      const ctx = canvas.getContext("2d");
+
+      let timer = 0;
+
+      //Har forsøkt å lage timer, uten hell, siden den ikke vises på siden
+      /*const timeDisplay = document.createElement("p");
+      document.body.appendChild(timeDisplay);
+      const averageElementsCounter = document.createElement("p");
+      document.body.appendChild(averageElementsCounter);*/
+
+      //TODO: Storage of multiple element objects (Grade C and above)
+      //Har ikke behøvd å gjøre noe her, så blir litt usikker, selv om jeg klarer å lage flere elementer..
+      const elements = [
+        { type: "square", x: 23, y: 220 },
+        { type: "circle", x: 381, y: 444 },
+      ];
+
+      //funksjon som legger til en firkant
+      function addSquare() {
+        //bruker random fra Math-modulen til å velge plasseringen på firkanten
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        //husker ikke navnet i javascript, men a la "struct" i C for å lage en "oppskrift" på hva en firkan er i denne sammenhengen, eller som konstruktør i java for å beskrive hva et objekt består av.
+        const square = {
+          type: "square",
+          x: x,
+          y: y,
+          size: 8,
+          color: "blue",
+        };
+        //legger til elementet når funksjonen kalles
+        elements.push(square);
+        //oppdaterer telleren for antall objekter
+        updateSquareCounter();
+        updateTotalCounter();
+        //calculateAverage();
+      }
+
+      //tilsvarende implementasjon av sirkel som er kommentert over i addSquare()
+      function addCircle() {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+
+        const circle = {
+          type: "circle",
+          x: x,
+          y: y,
+          radius: 13,
+          color: "yellow",
+        };
+        elements.push(circle);
+        updateCircleCounter();
+        updateTotalCounter();
+        //calculateAverage();
+      }
+
+      //TODO: Function to remove random element:
+      /*Funksjon som først fjerner et element (hvis det er et å fjerne), ved å bruke Math.random for å generere et tilfeldig tall basert på elementarrayets størrelse for å fjerne et tilfeldig element i arrayet. Til slutt kalles counter-funksjonene slik at de oppdateres.
+      benyttet https://stackoverflow.com/questions/23224236/how-to-use-the-slice-method-to-take-a-random-element-from-an-array-and-store-it for å finne riktig metode for å splice tilfeldig sted i arrayets størrelse*/
+      function removeElement() {
+        if (elements.length > 0) {
+          const randomElement = elements.splice(
+            Math.floor(Math.random() * elements.length),
+            1,
+          );
+          updateSquareCounter();
+          updateCircleCounter();
+          updateTotalCounter();
+          //calculateAverage();
+        }
+      }
+
+      //TODO: EventListeners to track user input:
+      //en litt klønete event-listener som sjekker om tastene s, c eller r trykkes og kaller funksjoner deretter
+      //initialiserer listener på "keydown", og kaller funksjon med event gitt i if-løkker
+      //har benyttet https://www.w3schools.com/jsref/event_onkeydown.asp og https://developer.mozilla.org/en-US/docs/Web/API/Element/keydown_event for å finne riktig syntaks
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "s" || event.key === "S") {
+          addSquare();
+        } else if (event.key === "c" || event.key === "C") {
+          addCircle();
+        } else if (event.key === "r" || event.key === "R") {
+          removeElement();
+        }
+      });
+
+      //TODO: Count the element types and total and print to interface
+      //for-løkker som itererer gjennom antall elementer av typen (og akkurat typen (===) square/circle og oppdaterer hver counter deretter.)
+      function updateSquareCounter() {
+        let numberOfSquares = 0;
+        for (let i = 0; i < elements.length; i++) {
+          if (elements[i].type === "square") {
+            numberOfSquares++;
+          }
+        }
+        let squareCounter = document.getElementById("squareCount");
+        squareCounter.textContent = numberOfSquares;
+      }
+
+      function updateCircleCounter() {
+        let numberOfCircles = 0;
+        for (let i = 0; i < elements.length; i++) {
+          if (elements[i].type === "circle") {
+            numberOfCircles++;
+          }
+        }
+        let circleCounter = document.getElementById("circleCount");
+        circleCounter.textContent = numberOfCircles;
+      }
+
+      function updateTotalCounter() {
+        let totalNumber = elements.length;
+        let totalCount = document.getElementById("totalCount");
+        totalCount.textContent = totalNumber;
+      }
+
+      function renderDrawings() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        //hentet "mal" for oppsettet fra https://github.com/toremake/innfprog/blob/main/ovingsoppgaver/canvas-tegning/redsquare.html
+        elements.forEach(function (element) {
+          if (element.type === "square") {
+            ctx.beginPath();
+            ctx.rect(element.x, element.y, element.size, element.size);
+            ctx.fillStyle = element.color;
+            ctx.fill();
+            ctx.closePath();
+          } else if (element.type === "circle") {
+            ctx.beginPath();
+            ctx.arc(element.x, element.y, element.radius, 0, 2 * Math.PI);
+            ctx.fillStyle = element.color;
+            ctx.fill();
+            ctx.closePath();
+          }
+        });
+
+        /*Funksjon for å telle sekunder som har gått siden spillet begynte, starter med å initialisere variabelen timer og display-elementet og legge displaytimeren på nav*/
+
+        function updateTimer() {
+          timer++;
+          timeDisplay.textContent = "Playtime: " + timer + " seconds";
+          //calculateAverage();
+        }
+
+        /*Funksjon for å beregne gjennomsnittet av elementer i canvaset, starter på samme måte som timer med å initialisere display, se kommentar om timer, fikk ikke til å funke
+        function calculateAverage() {
+          if (timer > 0) {
+            let avg = elements.length / timer;
+            averageElementsCounter.textContent =
+              "Avg elements/s: " + avg;
+          }
+        }*/
+
+        //Testprint:
+        console.log("Currently drawing frames...");
+
+        //Har beholdt uendret, siden dette funksjonskallet tilsynelatende funker fint etter at jeg endelig fikk løst renderDrawings-funksjonene
+        //Use requestAnimationFrame to re-run renderDrawings-function
+        requestAnimationFrame(renderDrawings);
+      }
+
+      //Start drawing
+      renderDrawings();
+
+      //setInterval(updateTimer, 1000);
+    </script>
+  </body>
+</html>
